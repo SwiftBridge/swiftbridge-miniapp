@@ -1,48 +1,66 @@
-# swiftbridge-miniapp
-mini app
 # SwiftBridge Mini App
 
-Telegram Mini App for SwiftBridge - Web interface with wallet connection for crypto operations on Base network.
+Telegram Mini App for **SwiftBridge** — a web-based interface enabling seamless crypto operations on the **Base Network**.
+This mini app allows users to connect their wallets, manage balances, perform token swaps, and send peer-to-peer (P2P) transfers directly from Telegram.
+
+---
+
+## Overview
+
+The SwiftBridge Mini App is built with **Next.js**, **Wagmi**, and **Reown AppKit (WalletConnect)** to provide a secure and intuitive decentralized finance experience.
+It supports real-time wallet connections, token swaps via **Uniswap V3**, and P2P transfers tied to Telegram usernames, making it a fully integrated Web3 experience inside Telegram.
+
+---
 
 ## Features
 
-- 🔗 **Wallet Connection** - Connect via Reown AppKit (WalletConnect)
-- 📊 **Dashboard** - View balances and portfolio
-- 🔄 **Token Swaps** - Exchange tokens via Uniswap V3
-- 📤 **P2P Transfers** - Send to Telegram usernames
-- 🎨 **Modern UI** - Beautiful, responsive design
-- 📱 **Telegram Integration** - Works as Telegram Mini App
+* **Wallet Connection** — Connect via Reown AppKit (WalletConnect) to supported wallets.
+* **Dashboard** — Display token balances, USD/NGN value, and user registration status.
+* **Token Swaps** — Swap tokens using the Uniswap V3 protocol.
+* **P2P Transfers** — Send tokens to Telegram usernames.
+* **Telegram Integration** — Runs as a Telegram Mini App within your existing bot.
+* **Modern UI** — Built with Tailwind CSS, offering a fast, responsive, and modern interface.
 
-## Setup
+---
 
-### Prerequisites
+## Prerequisites
 
-- Node.js v18+
-- Reown Project ID (get from https://cloud.reown.com/)
-- Deployed SwiftBridge contracts on Base Sepolia
+Before starting, ensure you have:
 
-### Installation
+* Node.js v18 or later
+* A **Reown Project ID** (obtain from [Reown Cloud](https://cloud.reown.com/))
+* Deployed **SwiftBridge** smart contracts on **Base Sepolia** network
+
+---
+
+## Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Copy environment file
+# Copy the environment file
 cp .env.local.example .env.local
 
-# Edit .env.local with your values
+# Edit environment variables
 nano .env.local
 ```
 
-### Get Reown Project ID
+---
 
-1. Go to https://cloud.reown.com/
-2. Sign up / Log in
+## Reown Project Setup
+
+1. Visit [https://cloud.reown.com/](https://cloud.reown.com/)
+2. Log in or create an account
 3. Create a new project
-4. Copy the Project ID
-5. Add to `.env.local`
+4. Copy the **Project ID**
+5. Paste it into `.env.local` as `NEXT_PUBLIC_REOWN_PROJECT_ID`
 
-### Environment Variables
+---
+
+## Environment Configuration
+
+Edit the `.env.local` file to include your network and contract details:
 
 ```env
 NEXT_PUBLIC_REOWN_PROJECT_ID=your_reown_project_id
@@ -57,10 +75,12 @@ NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
 NEXT_PUBLIC_BOT_USERNAME=swiftbridgebot
 ```
 
-### Running
+---
+
+## Running Locally
 
 ```bash
-# Development
+# Development mode
 npm run dev
 
 # Production build
@@ -68,7 +88,9 @@ npm run build
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
 
 ## Project Structure
 
@@ -76,166 +98,185 @@ Open [http://localhost:3000](http://localhost:3000)
 swiftbridge-miniapp/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx       # Root layout with providers
-│   │   ├── page.tsx         # Main page
-│   │   └── globals.css      # Global styles
+│   │   ├── layout.tsx         # Root layout with providers
+│   │   ├── page.tsx           # Main entry page
+│   │   └── globals.css        # Global Tailwind styles
 │   ├── components/
-│   │   ├── Providers.tsx    # Wagmi & React Query providers
-│   │   ├── WalletConnect.tsx # Wallet connection button
-│   │   ├── Dashboard.tsx    # Balance dashboard
-│   │   ├── SwapInterface.tsx # Token swap UI
-│   │   └── SendInterface.tsx # P2P transfer UI
+│   │   ├── Providers.tsx      # Wagmi & React Query providers
+│   │   ├── WalletConnect.tsx  # Wallet connection component
+│   │   ├── Dashboard.tsx      # User dashboard view
+│   │   ├── SwapInterface.tsx  # Token swap functionality
+│   │   └── SendInterface.tsx  # P2P transfer UI
 │   └── config/
-│       ├── wagmi.ts         # Wagmi configuration
-│       └── contracts.ts     # Contract addresses & ABIs
+│       ├── wagmi.ts           # Wagmi and chain configuration
+│       └── contracts.ts       # Contract addresses and ABIs
 └── package.json
 ```
 
-## Integration with Telegram Bot
+---
 
-### Add Mini App to Bot
+## Telegram Bot Integration
 
-1. Open @BotFather in Telegram
-2. Send `/mybots`
-3. Select your bot
-4. Click "Bot Settings" → "Menu Button"
-5. Set URL to your deployed mini app URL
+### Adding the Mini App to Your Bot
 
-### Commands in Bot
+1. Open **@BotFather** in Telegram
+2. Run `/mybots` and select your bot
+3. Go to **Bot Settings → Menu Button**
+4. Set the URL to your deployed Mini App
 
-Add these commands to link to mini app:
+### Example Bot Command
 
-```
-/app - Open SwiftBridge App
-```
+In your bot code (Node.js + Telegraf example):
 
-In bot code:
 ```typescript
 bot.command('app', async (ctx) => {
   await ctx.reply('Open SwiftBridge App', {
     reply_markup: {
       inline_keyboard: [[
-        { text: '🚀 Launch App', web_app: { url: 'https://your-app-url.com' } }
+        { text: 'Launch App', web_app: { url: 'https://your-app-url.com' } }
       ]]
     }
-  })
-})
+  });
+});
 ```
+
+---
 
 ## Deployment
 
 ### Vercel (Recommended)
 
 ```bash
-# Install Vercel CLI
 npm i -g vercel
-
-# Deploy
 vercel
-
-# Set environment variables in Vercel dashboard
 ```
 
-### Other Platforms
+After deployment, set your environment variables in the **Vercel dashboard**.
 
-- **Netlify**: Connect GitHub repo, set env vars
-- **Railway**: Deploy from GitHub, add env vars
-- **Cloudflare Pages**: Connect repo, configure build
+### Alternative Hosting Options
 
-## Features Breakdown
+* **Netlify** — Connect via GitHub and set env vars
+* **Railway** — Deploy repository and add environment variables
+* **Cloudflare Pages** — Configure build command and variables
+
+---
+
+## Functional Overview
 
 ### Dashboard
-- Total balance in USD and Naira
-- Individual token balances
-- Username registration status
-- Quick action buttons
+
+* Displays wallet balances in USD and NGN
+* Shows user registry verification status
+* Provides shortcuts to send or swap tokens
 
 ### Swap Interface
-- Token selection
-- Amount input
-- Live rate preview
-- Slippage settings
-- Fee display
+
+* Token selector with real-time rates
+* Adjustable slippage tolerance
+* Fee estimation and confirmation modal
 
 ### Send Interface
-- Username input
-- Token & amount selection
-- Optional message
-- Instant or pending transfer
-- Transaction confirmation
+
+* Input recipient’s Telegram username
+* Choose token and amount
+* Option to include a message
+* Displays pending and confirmed transfers
+
+---
 
 ## Wallet Support
 
-Via Reown AppKit, supports:
-- MetaMask
-- WalletConnect compatible wallets
-- Coinbase Wallet
-- Trust Wallet
-- Rainbow
-- And 300+ other wallets
+Integrated via **Reown AppKit**, supporting:
 
-## Styling
+* MetaMask
+* WalletConnect-compatible wallets
+* Coinbase Wallet
+* Trust Wallet
+* Rainbow Wallet
+* Over 300 compatible wallets
 
-Built with Tailwind CSS:
-- Responsive design
-- Dark mode support
-- Modern gradients
-- Smooth animations
+---
+
+## Styling and UI
+
+The app uses **Tailwind CSS** for styling with:
+
+* Responsive and adaptive design
+* Dark mode support
+* Modern gradients and animations
+* Lightweight and modular UI components
+
+---
 
 ## Testing
 
 ```bash
-# Test in browser
+# Local testing
 npm run dev
 
-# Test as Telegram Mini App
-# 1. Deploy to public URL
-# 2. Add to bot via BotFather
-# 3. Open bot in Telegram
-# 4. Click app button
+# Test inside Telegram
+# 1. Deploy to a public HTTPS URL
+# 2. Add Mini App to your bot via BotFather
+# 3. Open Telegram and access your bot
+# 4. Launch the Mini App
 ```
-
-## Troubleshooting
-
-### Wallet not connecting
-- Check Reown Project ID is correct
-- Verify network is Base Sepolia (84532)
-- Try different wallet
-
-### Transactions failing
-- Ensure wallet has Base Sepolia ETH for gas
-- Check contract addresses are correct
-- Verify token approvals
-
-### Mini App not loading in Telegram
-- Ensure URL is HTTPS
-- Check Telegram WebApp SDK loaded
-- Verify URL in BotFather settings
-
-## Security
-
-- ✅ All transactions signed by user's wallet
-- ✅ No private keys stored
-- ✅ Contract interactions via ethers.js
-- ✅ Reown AppKit for secure wallet connection
-
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Open Pull Request
-
-## License
-
-MIT License
-
-## Support
-
-- GitHub Issues
-- Telegram: @SwiftBridgeSupport
 
 ---
 
-Built with ❤️ using Next.js, Reown AppKit, and Wagmi
+## Troubleshooting
+
+### Wallet Connection Issues
+
+* Verify the **Reown Project ID** is correct
+* Ensure the connected network is **Base Sepolia (84532)**
+* Try reconnecting or switching wallets
+
+### Transaction Failures
+
+* Check that your wallet has Base Sepolia ETH for gas
+* Confirm contract addresses are valid
+* Ensure token approvals are granted
+
+### Mini App Not Loading in Telegram
+
+* Verify the app is served over **HTTPS**
+* Ensure the **Telegram WebApp SDK** is properly initialized
+* Confirm the correct URL is set in BotFather
+
+---
+
+## Security
+
+* All transactions require user wallet signatures
+* No private keys or sensitive data are stored
+* Contract interactions handled via `ethers.js`
+* Secure wallet connections using Reown AppKit
+* Verified smart contracts deployed on Base Sepolia
+
+---
+
+## Contributing
+
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Commit your changes (`git commit -m "Add feature"`)
+4. Push to your fork (`git push origin feature-name`)
+5. Open a Pull Request for review
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+You are free to use, modify, and distribute it with proper attribution.
+
+---
+
+## Support
+
+* Report issues on GitHub
+* Telegram Support: **@SwiftBridgeSupport**
+
+---
+
+**Built with Next.js, Reown AppKit, and Wagmi — powering the SwiftBridge ecosystem on Base.**
